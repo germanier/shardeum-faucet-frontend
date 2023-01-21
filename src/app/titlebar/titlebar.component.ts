@@ -22,8 +22,8 @@ export class TitlebarComponent implements OnInit {
   }
 
   connectWallet = async () => {
-    let chainId = await this.checkChainId();
-    if (chainId === -1) {
+    let chainId = await this.changeToLibertyChain();
+    if (chainId === -1 || chainId === 0) {
       return;
     }
     let res = await this.walletService
@@ -39,22 +39,44 @@ export class TitlebarComponent implements OnInit {
 
   // check functions
 
-  checkChainId = async (): Promise<number> => {
-    let chainId = await this.walletService.checkChainId();
+  changeToLibertyChain = async () => {
+    let chainId = await this.checkChainId();
+    let res: any;
     if (chainId === 8081) {
-      return chainId;
+      return 8081;
+    } else if (chainId === -1) {
+      return -1;
+    } else {
+      res = await this.walletService.changeToLibertyChain();
     }
-    const res = await this.walletService.changeToLibertyChain();
     if (!res.result) {
       this.displayToast('error', res.response as string);
+      return 0;
+    }
+    return 8081;
+  };
+
+  checkChainId = async (): Promise<number> => {
+    let chainId = await this.walletService.checkChainId();
+    if (!chainId.result) {
+      this.displayToast('error', chainId.response as string);
       return -1;
     }
-    chainId = await this.walletService.checkChainId();
-    return chainId as number;
+    return parseInt(chainId.response as string, 16) as number;
   };
 
   checkWalletConnected = async () => {
     const accounts = await this.walletService.checkWalletConnected();
+    const chainId = await this.checkChainId();
+    if (chainId !== 8081) {
+      this.walletConnected = false;
+      this.walletAddress = '';
+      return {
+        result: 'error',
+        response:
+          'DApp is not connected to Liberty Chain. Please try connecting again.',
+      };
+    }
     if (accounts.length > 0) {
       this.walletConnected = true;
       this.walletAddress = accounts[0];

@@ -36,18 +36,30 @@ export class WalletService {
     }
   };
 
-  public checkChainId = async () => {
+  public checkChainId = async (): Promise<MetaMaskResponse> => {
     try {
-      if (!this.ethereum) return alert('Please install Metamask');
+      if (!this.ethereum)
+        return {
+          result: false,
+          response: 'Please install Metamask',
+        };
       const chainId = await this.ethereum.request({ method: 'eth_chainId' });
       console.log('chainId', chainId);
-      return parseInt(chainId, 16);
+      return {
+        result: true,
+        response: chainId,
+      };
     } catch (e) {
       throw new Error('Error getting chainId from Metamask');
     }
   };
 
   public changeToLibertyChain = async (): Promise<MetaMaskResponse> => {
+    if (!this.ethereum)
+      return {
+        result: false,
+        response: 'Please install Metamask',
+      };
     try {
       await this.ethereum.request({
         method: 'wallet_switchEthereumChain',
