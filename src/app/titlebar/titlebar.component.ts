@@ -69,12 +69,6 @@ export class TitlebarComponent implements AfterViewInit {
 
   checkWalletConnected = async () => {
     const accounts = await this.walletService.checkWalletConnected();
-    if (!accounts.result) {
-      return {
-        result: 'error',
-        response: 'Metamask is not installed.',
-      };
-    }
     const chainId = await this.checkChainId();
     if (chainId !== 8081) {
       this.walletConnected = false;
