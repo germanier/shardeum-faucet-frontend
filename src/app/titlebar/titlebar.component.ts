@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { WalletService } from '../services/wallet.service';
-import { MessageService } from 'primeng/api';
 import { ToastService } from '../services/toast.service';
 
 @Component({
@@ -15,7 +14,6 @@ export class TitlebarComponent implements AfterViewInit {
 
   constructor(
     private walletService: WalletService,
-    private messageService: MessageService,
     private toastService: ToastService
   ) {}
 
@@ -31,12 +29,12 @@ export class TitlebarComponent implements AfterViewInit {
     let res = await this.walletService
       .connectWallet()
       .then(() => this.checkWalletConnected());
-    this.displayToast(res.result, res.response as string);
+    this.toastService.displayToast(res.result, res.response as string);
   };
 
   displayWalletStatus = async () => {
     const res = await this.checkWalletConnected();
-    this.displayToast(res.result, res.response as string);
+    this.toastService.displayToast(res.result, res.response as string);
   };
 
   // check functions
@@ -52,7 +50,7 @@ export class TitlebarComponent implements AfterViewInit {
       res = await this.walletService.changeToLibertyChain();
     }
     if (!res.result) {
-      this.displayToast('error', res.response as string);
+      this.toastService.displayToast('error', res.response as string);
       return 0;
     }
     return 8081;
@@ -61,7 +59,7 @@ export class TitlebarComponent implements AfterViewInit {
   checkChainId = async (): Promise<number> => {
     let chainId = await this.walletService.checkChainId();
     if (!chainId.result) {
-      this.displayToast('error', chainId.response as string);
+      this.toastService.displayToast('error', chainId.response as string);
       return -1;
     }
     return parseInt(chainId.response as string, 16) as number;
@@ -100,13 +98,4 @@ export class TitlebarComponent implements AfterViewInit {
       };
     }
   };
-
-  // helper functions
-  displayToast(_severity: string, _detail: string) {
-    this.messageService.add({
-      severity: _severity,
-      summary: _severity.charAt(0).toUpperCase() + _severity.slice(1),
-      detail: _detail,
-    });
-  }
 }

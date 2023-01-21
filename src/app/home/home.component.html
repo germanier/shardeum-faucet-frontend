@@ -1,2 +1,25 @@
-<p class="text-center">home works!</p>
 <p-toast position="bottom-right"></p-toast>
+
+<div
+  class="mt-10 flex flex-col w-full justify-center lg:items-start overflow-y-hidden"
+>
+  <h1
+    class="my-4 text-3xl drop-shadow-2xl md:text-5xl text-white font-bold leading-tight self-center slide-in-bottom-h1 mb-10"
+  >
+    Shardeum Liberty 2.x Faucet
+  </h1>
+  <div class="flex flex-col mt-4 w-full">
+    <h2
+      class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-2xl mb-5 text-center slide-in-bottom-subtitle self-center"
+    >
+      Use our faucet below if you have enough SHM to pay for ⛽ gas.
+    </h2>
+    <p
+      class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-2xl mb-5 text-center slide-in-bottom-subtitle self-center"
+    >
+      Otherwise, get some 💦 drip first below!
+    </p>
+  </div>
+
+  <button pButton (click)="bobConnect()"></button>
+</div>

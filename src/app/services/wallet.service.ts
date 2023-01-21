@@ -10,6 +10,7 @@ interface MetaMaskResponse {
 })
 export class WalletService {
   public ethereum;
+
   constructor() {
     this.ethereum = (window as any).ethereum;
   }
