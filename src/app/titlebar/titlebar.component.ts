@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { WalletService } from 'src/app/services/wallet.service';
 import { MessageService } from 'primeng/api';
 
@@ -7,7 +8,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './titlebar.component.html',
   styleUrls: ['./titlebar.component.scss'],
 })
-export class TitlebarComponent {
+export class TitlebarComponent implements OnInit {
   public walletConnected: boolean = false;
   public walletAddress: string = '';
 
@@ -16,14 +17,24 @@ export class TitlebarComponent {
     private messageService: MessageService
   ) {}
 
+  ngOnInit(): void {
+    this.checkWalletConnected();
+  }
+
   connectWallet = async () => {
     let chainId = await this.checkChainId();
     if (chainId === -1) {
       return;
     }
-    await this.walletService
+    let res = await this.walletService
       .connectWallet()
       .then(() => this.checkWalletConnected());
+    this.displayToast(res.result, res.response as string);
+  };
+
+  displayWalletStatus = async () => {
+    const res = await this.checkWalletConnected();
+    this.displayToast(res.result, res.response as string);
   };
 
   // check functions
@@ -47,20 +58,22 @@ export class TitlebarComponent {
     if (accounts.length > 0) {
       this.walletConnected = true;
       this.walletAddress = accounts[0];
-      this.displayToast(
-        'success',
-        'DApp is connected to: ' +
+      return {
+        result: 'success',
+        response:
+          'DApp is connected to: ' +
           this.walletAddress.substring(0, 10) +
           '...' +
-          this.walletAddress.substring(this.walletAddress.length - 4)
-      );
+          this.walletAddress.substring(this.walletAddress.length - 4),
+      };
     } else {
       this.walletConnected = false;
       this.walletAddress = '';
-      this.displayToast(
-        'error',
-        'Failed to connect to wallet. Please try again.'
-      );
+      return {
+        result: 'error',
+        response:
+          'DApp is not connected to a wallet. Please try connecting again.',
+      };
     }
   };
 
