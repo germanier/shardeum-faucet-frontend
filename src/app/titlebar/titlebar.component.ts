@@ -1,23 +1,25 @@
 import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { WalletService } from 'src/app/services/wallet.service';
+import { AfterViewInit } from '@angular/core';
+import { WalletService } from '../services/wallet.service';
 import { MessageService } from 'primeng/api';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-titlebar',
   templateUrl: './titlebar.component.html',
   styleUrls: ['./titlebar.component.scss'],
 })
-export class TitlebarComponent implements OnInit {
+export class TitlebarComponent implements AfterViewInit {
   public walletConnected: boolean = false;
   public walletAddress: string = '';
 
   constructor(
     private walletService: WalletService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private toastService: ToastService
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.checkWalletConnected();
   }
 
@@ -67,6 +69,12 @@ export class TitlebarComponent implements OnInit {
 
   checkWalletConnected = async () => {
     const accounts = await this.walletService.checkWalletConnected();
+    if (!accounts.result) {
+      return {
+        result: 'error',
+        response: 'Metamask is not installed.',
+      };
+    }
     const chainId = await this.checkChainId();
     if (chainId !== 8081) {
       this.walletConnected = false;
@@ -105,7 +113,6 @@ export class TitlebarComponent implements OnInit {
       severity: _severity,
       summary: _severity.charAt(0).toUpperCase() + _severity.slice(1),
       detail: _detail,
-      life: _severity === 'error' ? 10000 : 3000,
     });
   }
 }

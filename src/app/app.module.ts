@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { WalletService } from './services/wallet.service';
+import { ToastService } from './services/toast.service';
+
 // primeNG
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -24,7 +27,7 @@ import { HomeComponent } from './home/home.component';
     InputTextModule,
     ToastModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ToastService, WalletService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
