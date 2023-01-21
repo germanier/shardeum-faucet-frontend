@@ -13,9 +13,10 @@ import { MessageService } from 'primeng/api';
 
 import { TitlebarComponent } from './titlebar/titlebar.component';
 import { FoxComponent } from './assets/fox/fox.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, TitlebarComponent, FoxComponent],
+  declarations: [AppComponent, TitlebarComponent, FoxComponent, HomeComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
