@@ -13,9 +13,14 @@ export class HomeComponent {
     private walletService: WalletService,
     private toastService: ToastService,
     private apiService: ApiService
-  ) {}
+  ) {
+    this.walletService.account.subscribe((account) => {
+      console.log('account', account);
+      this.address = account;
+    });
+  }
 
-  address: string = '0x00';
+  address: string = '';
   bobConnect() {
     console.log('bobConnect');
     this.apiService.dripFaucet(this.address).subscribe((res: any) => {

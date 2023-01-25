@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 interface MetaMaskResponse {
   result: boolean;
@@ -11,6 +12,8 @@ interface MetaMaskResponse {
 export class WalletService {
   public ethereum;
 
+  public account = new BehaviorSubject<string>('');
+  
   constructor() {
     this.ethereum = (window as any).ethereum;
   }
@@ -24,6 +27,7 @@ export class WalletService {
       const accounts = await this.ethereum.request({
         method: 'eth_requestAccounts',
       });
+      this.account.next(accounts[0]);
       return accounts[0];
     } catch (e) {
       throw new Error('Error connecting to Metamask');
@@ -37,6 +41,7 @@ export class WalletService {
         return false;
       }
       const accounts = await this.ethereum.request({ method: 'eth_accounts' });
+      this.account.next(accounts[0]);
       return accounts;
     } catch (e) {
       throw new Error('Error getting accounts from Metamask');
