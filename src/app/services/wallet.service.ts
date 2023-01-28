@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ethers } from 'ethers';
 
 interface MetaMaskResponse {
   result: boolean;
@@ -13,7 +14,9 @@ export class WalletService {
   public ethereum;
 
   public account = new BehaviorSubject<string>('');
-  
+  public chainId = new BehaviorSubject<string>('');
+  public provider = new BehaviorSubject<unknown>(null);
+
   constructor() {
     this.ethereum = (window as any).ethereum;
   }
@@ -28,6 +31,8 @@ export class WalletService {
         method: 'eth_requestAccounts',
       });
       this.account.next(accounts[0]);
+      let provider = new ethers.providers.Web3Provider(this.ethereum);
+      this.provider.next(provider);
       return accounts[0];
     } catch (e) {
       throw new Error('Error connecting to Metamask');
@@ -41,6 +46,8 @@ export class WalletService {
         return false;
       }
       const accounts = await this.ethereum.request({ method: 'eth_accounts' });
+      let provider = new ethers.providers.Web3Provider(this.ethereum);
+      this.provider.next(provider);
       this.account.next(accounts[0]);
       return accounts;
     } catch (e) {
@@ -56,6 +63,7 @@ export class WalletService {
           response: 'Please install Metamask',
         };
       const chainId = await this.ethereum.request({ method: 'eth_chainId' });
+      this.chainId.next(chainId);
       console.log('chainId', chainId);
       return {
         result: true,
@@ -104,7 +112,11 @@ export class WalletService {
           };
         }
       }
-      return { result: false, response: 'Error switching to Liberty 2.x' };
+      return {
+        result: false,
+        response:
+          'Error switching to Liberty 2.x. Please try connecting again.',
+      };
     }
     return { result: true, response: null };
   };
