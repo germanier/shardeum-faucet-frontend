@@ -1,14 +1,18 @@
-<p-toast position="bottom-right"></p-toast>
+<p-toast
+  position="bottom-left sm:bottom-right"
+  [preventOpenDuplicates]="true"
+  class="w-30 sm:w-40"
+></p-toast>
 
 <div
-  class="mt-10 flex flex-col w-full justify-center lg:items-start overflow-y-hidden"
+  class="mt-10 flex flex-col w-full justify-center items-center lg:items-start overflow-y-hidden"
 >
   <h1
-    class="my-4 text-3xl drop-shadow-2xl md:text-5xl text-white font-bold leading-tight self-center slide-in-bottom-h1 mb-10"
+    class="my-4 text-3xl drop-shadow-2xl md:text-5xl text-white font-bold leading-tight self-center text-center slide-in-bottom-h1 mb-10"
   >
     Shardeum Liberty 2.x Faucet
   </h1>
-  <div class="flex flex-col mt-4 w-full">
+  <div class="flex flex-col mt-4 w-full pl-8 pr-8">
     <h2
       class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-2xl mb-5 text-center slide-in-bottom-subtitle self-center"
     >
@@ -17,37 +21,48 @@
     <p
       class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-2xl mb-5 text-center slide-in-bottom-subtitle self-center"
     >
-      Otherwise, get some 💦 drip first below!
+      Otherwise, get some 💧 drip first below!
     </p>
   </div>
-  <div class="flex flex-col mt-8 w-full justify-center items-center">
+  <div class="flex flex-col mt-8 w-full pl-8 pr-8 justify-center items-center">
     <h2
       class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-xl mb-5 text-center slide-in-bottom-subtitle self-center"
     >
-    ⛽ Gas Faucet Balance: {{ gasFaucetBalance }} SHM
+      ⛽ Gas Faucet Balance: {{ gasFaucetBalance }} SHM
     </h2>
     <h2
       class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-xl mb-5 text-center slide-in-bottom-subtitle self-center"
     >
       Last Withdrawal Time: {{ gasFaucetLastWithdrawal | date : "medium" }}
     </h2>
-    <button pButton (click)="gasFaucetWithdraw()" [disabled]="account.length < 42">
-      Gas Faucet (10 SHM)
-    </button>
+    <button
+      pButton
+      (click)="gasFaucetWithdraw()"
+      [disabled]="account.length < 42"
+      [innerText]="'Gas Faucet (10 SHM)'"
+    ></button>
   </div>
-  <div class="flex flex-col mt-12 w-full justify-center items-center">
+  <div
+    class="flex flex-col mt-12 w-full pl-8 pr-8 ejustify-center items-center"
+  >
     <h2
-      class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-xl mb-5 text-center slide-in-bottom-subtitle self-center"
+      class="leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-xl mb-5 text-center slide-in-bottom-subtitle self-center"
     >
-    💦 Drip Faucet Balance: {{ dripFaucetBalance }} SHM
+      💧 Drip Faucet Balance: {{ dripFaucetBalance }} SHM
     </h2>
     <h2
-      class="m-auto leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-xl mb-5 text-center slide-in-bottom-subtitle self-center"
+      class="leading-normal drop-shadow-2xl backdrop-blur-2xl text-base md:text-xl mb-5 text-center slide-in-bottom-subtitle self-center"
     >
       Last Withdrawal Time: {{ lastWithdrawalTimeDrip | date : "medium" }}
     </h2>
-    <button pButton (click)="dripFaucetWithdraw()" [disabled]="account.length < 42">
+    <button
+      pButton
+      (click)="dripFaucetWithdraw()"
+      [disabled]="account.length < 42"
+      class="pb-40"
+    >
       Drip Faucet (1 SHM)
     </button>
+    <div class="pt-10 sm:pt-0"></div>
   </div>
 </div>

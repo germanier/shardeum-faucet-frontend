@@ -42,7 +42,7 @@ export class WalletService {
   public checkWalletConnected = async () => {
     try {
       if (!this.ethereum) {
-        alert('Please install Metamask to access the Shardeum faucet');
+        // alert('Please install Metamask to access the Shardeum faucet');
         return false;
       }
       const accounts = await this.ethereum.request({ method: 'eth_accounts' });

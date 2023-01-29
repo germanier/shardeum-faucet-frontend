@@ -5,7 +5,7 @@
       class="flex items-center hover:text-white-300 text-white-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
     >
       <img src="./assets/logo.png" class="h-8 pr-2" viewbox="0 0 20 20" />
-      Shardeum
+      <a class="max-sm:hidden"> Shardeum </a>
     </a>
     <div class="flex w-1/2 justify-end content-center">
       <button
@@ -18,7 +18,7 @@
           </div>
 
           <div *ngIf="!walletConnected" class="text-center">
-            <p class="pl-8 pr-5">Connect with Metamask</p>
+            <p class="pl-8 pr-5">Connect Wallet</p>
           </div>
           <div *ngIf="walletConnected" class="text-center">
             <p class="pl-12 pr-10">
