@@ -25,6 +25,7 @@ export class HomeComponent {
     });
     this.walletService.provider.subscribe((provider) => {
       console.log('provider', provider);
+      if (!provider) return;
       this.provider = provider as Web3Provider;
 
       // update gas faucet balance
@@ -36,38 +37,63 @@ export class HomeComponent {
       this.provider.getBalance(this.dripFaucetAddress).then((balance) => {
         this.dripFaucetBalance = ethers.utils.formatEther(balance);
       });
+
+      // update last withdrawal time
+      this.checkLastWithdrawalTime();
     });
   }
 
   account: string = '';
   chainId: string = '';
   provider: Web3Provider | null = null;
+  contract: any;
 
   // gas faucet
   gasFaucetAddress: string = '0x731637A147a2eFEa91Ced8053667DF61C033DcBE';
   gasFaucetBalance: string = '';
-  gasFaucetAbi: any = [{"inputs":[],"name":"cooldown","type":"error"},{"inputs":[],"name":"faucetNotFunded","type":"error"},{"inputs":[],"name":"useFaucet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userPreviousWithdrawTime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
-  gasFaucetLastWithdrawal: Date = new Date();
+  gasFaucetAbi: any = [
+    { inputs: [], name: 'cooldown', type: 'error' },
+    { inputs: [], name: 'faucetNotFunded', type: 'error' },
+    {
+      inputs: [],
+      name: 'useFaucet',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    { stateMutability: 'payable', type: 'receive' },
+    {
+      inputs: [{ internalType: 'address', name: '', type: 'address' }],
+      name: 'userPreviousWithdrawTime',
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+  ];
+  gasFaucetLastWithdrawal: any;
 
   // drip faucet
   dripFaucetAddress: string = '0xa6d76cb2ad1c948bc8888d348e33c05e4fa90475';
   dripFaucetBalance: string = '';
-  lastWithdrawalTimeDrip: Date = new Date();
+  lastWithdrawalTimeDrip: any;
 
   // faucet withdrawals
   gasFaucetWithdraw() {
     console.log('gasFaucet');
 
-    let contract = new ethers.Contract(
+    this.contract = new ethers.Contract(
       this.gasFaucetAddress,
       this.gasFaucetAbi,
       this.provider?.getSigner()
     );
 
-    contract.attach(this.gasFaucetAddress)['useFaucet']().then((tx: any) => {
-      this.toastService.displayToast('success', 'Transaction sent');
-      console.log('tx', tx);
-    });
+    this.contract
+      .attach(this.gasFaucetAddress)
+      ['useFaucet']()
+      .then((tx: any) => {
+        this.toastService.displayToast('success', 'Transaction sent');
+        console.log('tx', tx);
+      });
   }
 
   dripFaucetWithdraw() {
@@ -80,4 +106,16 @@ export class HomeComponent {
     });
   }
 
+  async checkLastWithdrawalTime() {
+    this.contract = new ethers.Contract(
+      this.gasFaucetAddress,
+      this.gasFaucetAbi,
+      this.provider?.getSigner()
+    );
+    this.account = (await this.provider?.getSigner().getAddress()) as string;
+
+    this.contract.userPreviousWithdrawTime(this.account).then((time: any) => {
+      this.gasFaucetLastWithdrawal = new Date(time * 1000);
+    });
+  }
 }

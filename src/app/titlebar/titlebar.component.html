@@ -7,27 +7,29 @@
       <img src="./assets/logo.png" class="h-8 pr-2" viewbox="0 0 20 20" />
       <a class="max-sm:hidden"> Shardeum </a>
     </a>
-    <div class="flex w-1/2 justify-end content-center">
+    <div class="flex-row justify-end content-center">
       <button
         class="m-4 h-12 w-72 text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 mr-2 mb-2 transition hover:scale-105 transform duration-300 ease-in-out"
         (click)="walletConnected ? displayWalletStatus() : connectWallet()"
       >
-        <div class="flex items-center">
-          <div class="w-1/8 items-center">
-            <app-fox></app-fox>
-          </div>
+        <div class="flex flex-row items-center w-full">
+          <app-fox class="flex flex-col"></app-fox>
 
-          <div *ngIf="!walletConnected" class="text-center">
-            <p class="pl-8 pr-5">Connect Wallet</p>
+          <div
+            *ngIf="!walletConnected"
+            class="flex flex-col grow text-center self-center items-center"
+          >
+            Connect Wallet
           </div>
-          <div *ngIf="walletConnected" class="text-center">
-            <p class="pl-12 pr-10">
-              {{
-                walletAddress.substring(0, 10) +
-                  "..." +
-                  walletAddress.substring(walletAddress.length - 4)
-              }}
-            </p>
+          <div
+            *ngIf="walletConnected"
+            class="flex flex-col grow text-right self-center items-center"
+          >
+            {{
+              walletAddress.substring(0, 10) +
+                "..." +
+                walletAddress.substring(walletAddress.length - 4)
+            }}
           </div>
         </div>
       </button>
